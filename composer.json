@@ -1,0 +1,40 @@
+{
+    "name" : "mbo2olivier/makuta-client-bundle",
+    "description" : "e-Makuta client PHP, integrate Makuta PHP Client to symfony",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "Olivier M. Mukadi",
+        "email" : "mbo2olivier@gmail.com",
+        "homepage": "http://www.virtualconsultafrica.com"
+    }],
+    "version": "1.0.0-dev",
+    "keywords" : [
+        "symfony bundle", "e-makuta", "api client","m-pesa","mobile payment" 
+    ],
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": ">=2.1,<2.3-dev",
+        "doctrine/doctrine-bundle": "*",
+        "mbo2olivier/makuta_client": "*"
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Makuta\\ClientBundle" : ""
+        }
+    },
+    "repositories" : [
+        {
+            "type": "composer",
+            "url": "http://localhost/satis/web/"
+        }
+    ],
+    "extra" : {
+        "branch-alias" : {
+                "dev-master" : "1.0.0-dev"
+            }
+    }
+}
+
