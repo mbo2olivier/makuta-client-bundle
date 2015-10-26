@@ -1,4 +1,4 @@
 services:
-#    makuta_client.example:
-#        class: Makuta\ClientBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    makuta_client.makuta:
+        class: Makuta\ClientBundle\Model\Makuta
+        arguments: [%makuta_client.id%, %makuta_client.secret%, %makuta_client.method%]

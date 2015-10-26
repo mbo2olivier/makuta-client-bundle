@@ -24,5 +24,9 @@ class MakutaClientExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $configs = $configs[0];
+        $container->setParameter('makuta_client.id',$configs['client_app']['id']);
+        $container->setParameter('makuta_client.secret',$configs['client_app']['secret']);
+        $container->setParameter('makuta_client.method',$configs['client_app']['method']);
     }
 }
