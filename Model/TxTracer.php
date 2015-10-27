@@ -1,0 +1,135 @@
+<?php 
+namespace Makuta\ClientBundle\Model;
+
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Makuta\ClientBundle\Entity\Trace;
+/**
+* 
+*/
+class TxTracer
+{
+	protected $em;
+
+	protected $buyers;
+
+	protected $goods;
+	
+	function __construct(EntityManager $manager,$buyers,$goods)
+	{
+		$this->em = $manager;
+		$this->buyers = $buyers;
+		$this->goods = array();
+		foreach ($goods as $a) {
+			$this->goods[] = ((object)$a);
+		}
+	}
+
+	public function addTrace(Trace $trace)
+	{
+		$this->em->persist($trace);
+		$this->em->flush();
+	}
+
+	public function checkPayment(Buyer $b,Goods $g)
+	{
+		$qb = $this->em->createQueryBuilder();
+		$qb->select('t')
+		   ->from("MakutaClientBundle:Trace","t");
+		$bid = $this->getBuyerId($b);
+		$qb->andWhere('t.buyerId = :bid')
+		   ->setParameter("bid",$bid);
+		$gc = $this->getGoodsCode($g);
+		$qb->andWhere('t.goodsCode = :gc')
+		   ->setParameter("gc",$gc);
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
+	public function getTrace($criteria = array())
+	{
+		$qb = $this->em->createQueryBuilder();
+		$qb->select('t')
+		   ->from("MakutaClientBundle:Trace","t")
+		   ->orderBy("t.date","DESC");
+		if(isset($criteria['buyer'])){
+			$b = $this->getBuyerId($criteria['buyer']);
+			$qb->andWhere('t.buyerId = :bid')
+			   ->setParameter("bid",$b);
+		}
+		if(isset($criteria['goods'])){
+			$g = $this->getGoodsCode($criteria['goods']);
+			$qb->andWhere('t.goodsCode = :gc')
+			   ->setParameter("gc",$g);
+		}
+		if(isset($criteria["from"])){
+			$qb->andWhere('t.date >= :from')
+			   ->setParameter("from",$criteria["from"]);
+		}
+		if(isset($criteria["to"])){
+			$qb->andWhere('t.date < :to')
+			   ->setParameter("to",$criteria["to"]);
+		}
+		$query= $qb->getQuery();
+
+		if(isset($criteria['limit'])){
+			$first = $criteria['limit']['first'];
+			$max = $criteria['limit']['max'];
+			$query->setFirstResult($first)
+				  ->setMaxResults($max);
+			return new Paginator($query);
+		}else{
+			return $query->getResult();
+		}
+	}
+
+	public function getBuyerId(Buyer $b)
+	{
+		foreach ($this->buyers as $classe => $name) {
+			if($b instanceof $classe){
+				return $name."_".$b->getIdentifiant();
+			}
+		}
+		return null;
+	}
+
+	public function getGoodsCode(Goods $g)
+	{
+		foreach ($this->goods as $goods) {
+			$classe = $goods->entity;
+			if($g instanceof $classe){
+				return ($goods->name)."_".$g->getCode();
+			}
+		}
+		return null;
+	}
+
+	public function getPrice(Goods $g)
+	{
+		$price = $g->getPrice();
+		if(is_null($price)){
+			foreach ($this->goods as $goods) {
+				$classe = $goods->entity;
+				if($g instanceof $classe){
+					$price = $goods->price;
+					break;
+				}
+			}
+		}
+		return $price;
+	}
+
+	public function getDevise(Goods $g)
+	{
+		$currency = $g->getDevise();
+		if(is_null($currency)){
+			foreach ($this->goods as $goods) {
+				$classe = $goods->entity;
+				if($g instanceof $classe){
+					$currency = $goods->currency;
+					break;
+				}
+			}
+		}
+		return $currency;
+	}
+}

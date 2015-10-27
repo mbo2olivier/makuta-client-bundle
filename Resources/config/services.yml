@@ -2,3 +2,9 @@ services:
     makuta_client.makuta:
         class: Makuta\ClientBundle\Model\Makuta
         arguments: [%makuta_client.id%, %makuta_client.secret%, %makuta_client.method%]
+    makuta_client.tx_tracer:
+        class: Makuta\ClientBundle\Model\TxTracer
+        arguments:
+            - @doctrine.orm.entity_manager
+            - %makuta_client.buyers%
+            - %makuta_client.goods%

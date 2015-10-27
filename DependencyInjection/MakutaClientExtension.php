@@ -28,5 +28,34 @@ class MakutaClientExtension extends Extension
         $container->setParameter('makuta_client.id',$configs['client_app']['id']);
         $container->setParameter('makuta_client.secret',$configs['client_app']['secret']);
         $container->setParameter('makuta_client.method',$configs['client_app']['method']);
+        $this->loadTraceData($configs,$container);
     }
+
+    private function loadTraceData(array $configs, ContainerBuilder $container)
+    {
+        $buyers = array();
+        $goods = array();
+
+        $tx_enabled = isset($configs['tx_tracer']);
+        if($tx_enabled){
+            //load buyers from config file
+            $t = $configs['tx_tracer']['buyers'];
+            foreach ($t as $key => $className) {
+                $buyers[$className] = $key;
+            }
+            $t = $configs['tx_tracer']['goods'];
+            foreach ($t as $key => $data) {
+                $g = array();
+                $g["name"]=$key;
+                $g["entity"]=$data["class"];
+                $g["price"]=$data["default_price"];
+                $g["currency"]=$data["default_currency"];
+                $goods[] = ($g);
+            }
+        }
+        $container->setParameter('makuta_client.trace_enable',$tx_enabled);
+        $container->setParameter('makuta_client.buyers',$buyers);
+        $container->setParameter('makuta_client.goods',$goods);
+    }
+
 }
