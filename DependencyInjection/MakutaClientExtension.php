@@ -29,6 +29,24 @@ class MakutaClientExtension extends Extension
         $container->setParameter('makuta_client.secret',$configs['client_app']['secret']);
         $container->setParameter('makuta_client.method',$configs['client_app']['method']);
         $this->loadTraceData($configs,$container);
+        $this->loadCheckout($configs,$container);
+    }
+
+    public function loadCheckout(array $configs, ContainerBuilder $container)
+    {
+        $checkout_enabled = false;
+        if(isset($configs['tx_tracer']['checkout'])) $checkout_enabled = true;
+        if($checkout_enabled){
+            $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+            $loader->load('checkout.yml');
+            $container->setAlias('makuta_client.checkout.entity_provider',$configs['tx_tracer']['checkout']['entity_provider']);
+            $container->setParameter('makuta_client.routes.success_callback',$configs['tx_tracer']['checkout']['callback_routes']['success_route']);
+            $container->setParameter('makuta_client.routes.failure_callback',$configs['tx_tracer']['checkout']['callback_routes']['failure_route']);
+            $account = (isset($configs['tx_tracer']['checkout']['account']))? isset($configs['tx_tracer']['checkout']['account']): null; 
+            $container->setParameter('makuta_client.checkout.account',$account);
+        }
+
+        $container->setParameter('makuta_client.checkout_enabled',$checkout_enabled);
     }
 
     private function loadTraceData(array $configs, ContainerBuilder $container)

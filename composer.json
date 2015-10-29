@@ -7,7 +7,6 @@
         "email" : "mbo2olivier@gmail.com",
         "homepage": "http://www.virtualconsultafrica.com"
     }],
-    "version": "1.0.0-dev",
     "keywords" : [
         "symfony bundle", "e-makuta", "api client","m-pesa","mobile payment" 
     ],

@@ -10,6 +10,8 @@ interface Goods
 
 	public function getPrice();
 
-	public function getDevise();	
+	public function getDevise();
+
+	public function getName();
 	
 }

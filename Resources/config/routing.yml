@@ -1,3 +1,6 @@
-makuta_client_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: MakutaClientBundle:Default:index }
+makuta_client_checkout:
+    path:     /makuta/checkout/{gname}_{gcode}
+    defaults: { _controller: MakutaClientBundle:Checkout:payment }
+    requirements:
+        gcode: \w+
+        gname: \w+

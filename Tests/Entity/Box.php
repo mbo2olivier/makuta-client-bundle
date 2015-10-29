@@ -30,4 +30,8 @@ class Box implements \Makuta\ClientBundle\Model\Goods
 	public function getDevise(){
 		return null;
 	}
+
+	public function getName(){
+		return "box";
+	}
 }

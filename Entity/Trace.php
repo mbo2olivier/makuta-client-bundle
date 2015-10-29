@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Trace
  *
  * @ORM\Table(indexes={@ORM\Index(name="by_idx", columns={"buyer_id"}),
- *                     @ORM\Index(name="tk_idx", columns={"token"}),
  *                     @ORM\Index(name="gd_idx", columns={"goods_code"})
  *  })
  * @ORM\Entity
@@ -76,7 +75,7 @@ class Trace
     /**
      * @var string
      *
-     * @ORM\Column(name="token", type="string", length=255)
+     * @ORM\Column(name="token", type="string", length=255,unique=true)
      */
     private $token;
 
@@ -86,6 +85,13 @@ class Trace
      * @ORM\Column(name="status", type="smallint")
      */
     private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel", type="string", length=15,nullable=true)
+     */
+    private $tel;
 
 
     /**
@@ -303,5 +309,28 @@ class Trace
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set tel
+     *
+     * @param string $tel
+     * @return Trace
+     */
+    public function setTel($tel)
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    /**
+     * Get tel
+     *
+     * @return string 
+     */
+    public function getTel()
+    {
+        return $this->tel;
     }
 }

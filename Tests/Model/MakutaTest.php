@@ -16,6 +16,6 @@ class MakutaTest extends WebTestCase
 	    $container = $kernel->getContainer();
 	    $m = $container->get('makuta_client.makuta');
 	    $r = $m->openTransaction(500,"USD",22);
-	    $this->assertEquals(1, 1);
+	    $this->assertEquals($r["TOKEN"], "wesh12223654789azerty");
 	}
 }

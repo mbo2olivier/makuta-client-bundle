@@ -25,7 +25,7 @@ class TxTracer
 		}
 	}
 
-	public function addTrace(Trace $trace)
+	public function saveTrace(Trace $trace)
 	{
 		$this->em->persist($trace);
 		$this->em->flush();
@@ -42,6 +42,16 @@ class TxTracer
 		$gc = $this->getGoodsCode($g);
 		$qb->andWhere('t.goodsCode = :gc')
 		   ->setParameter("gc",$gc);
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
+	public function findTrace($token)
+	{
+		$qb = $this->em->createQueryBuilder();
+		$qb->select('t')
+		   ->from("MakutaClientBundle:Trace","t")
+		   ->where('t.token = :token')
+		   ->setParameter("token",$token);
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
@@ -131,5 +141,26 @@ class TxTracer
 			}
 		}
 		return $currency;
+	}
+
+	public function getClassFor($gcode)
+	{
+		$name = (preg_split("/_/", $gcode));
+		$name = $name[0];
+		foreach ($this->goods as $goods) {
+			if($name == $goods->name){
+				return $classe;
+			}
+		}
+		return null;
+	}
+
+	public function getNameFor($gcode)
+	{
+		if(preg_match("/_/", $gcode)){
+			$name = (preg_split("/_/", $gcode));
+			return $name[0];
+		}
+		return null;
 	}
 }

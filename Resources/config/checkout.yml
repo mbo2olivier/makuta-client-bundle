@@ -1,0 +1,14 @@
+services:
+    makuta_client.checkout:
+        class: Makuta\ClientBundle\Model\CheckOut
+        arguments:
+            - @makuta_client.makuta
+            - @makuta_client.tx_tracer
+            - @makuta_client.checkout.entity_provider
+            - %makuta_client.checkout.account%
+            - %makuta_client.checkout_enabled%
+    makuta_client.checkout_extension:
+        class: Makuta\ClientBundle\Twig\CheckoutExtension
+        arguments: [@router]
+        tags:
+            - { name : twig.extension }
