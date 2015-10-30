@@ -20,7 +20,7 @@
         "mbo2olivier/makuta_client": ">=1.0.0"
     },
     "autoload" : {
-        "psr-0" : {
+        "psr-4" : {
             "Makuta\\ClientBundle" : ""
         }
     },
@@ -29,11 +29,6 @@
             "type": "composer",
             "url": "http://localhost/satis/web/"
         }
-    ],
-    "extra" : {
-        "branch-alias" : {
-                "dev-master" : "1.0.0-dev"
-            }
-    }
+    ]
 }
 
