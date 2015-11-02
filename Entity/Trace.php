@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Trace
  *
- * @ORM\Table(indexes={@ORM\Index(name="by_idx", columns={"buyer_id"}),
+ * @ORM\Table(name="makuta_trace",indexes={@ORM\Index(name="by_idx", columns={"buyer_id"}),
  *                     @ORM\Index(name="gd_idx", columns={"goods_code"})
  *  })
  * @ORM\Entity

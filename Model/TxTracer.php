@@ -45,13 +45,13 @@ class TxTracer
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
-	public function findTrace($token)
+	public function findTrace($id)
 	{
 		$qb = $this->em->createQueryBuilder();
 		$qb->select('t')
 		   ->from("MakutaClientBundle:Trace","t")
-		   ->where('t.token = :token')
-		   ->setParameter("token",$token);
+		   ->where('t.id = :id')
+		   ->setParameter("id",$id);
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
