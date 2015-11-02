@@ -14,7 +14,7 @@ class Provider implements EntityProvider
 		return new Client("002","iNeph");
 	}
 
-	public function getGoods($name,$code){
+	public function getGoods($code){
 		return new Box("002","ceci est une box");
 	}
 }

@@ -24,9 +24,9 @@ class CheckoutController extends Controller
         }
     }
 
-    public function paymentAction($gname,$gcode)
+    public function paymentAction($code)
     {
-    	$url  = $this->get('makuta_client.checkout')->openTransaction($gname,$gcode);
+    	$url  = $this->get('makuta_client.checkout')->openTransaction($code);
     	return $this->redirect($url);
     }
 }

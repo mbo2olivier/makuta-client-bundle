@@ -26,9 +26,9 @@ class CheckOut
 		$this->enabled = $enabled;
 	}
 
-	public function openTransaction($gname,$gcode)
+	public function openTransaction($gcode)
 	{
-		$g = $this->provider->getGoods($gname,$gcode);
+		$g = $this->provider->getGoods($gcode);
 		$amount = $this->tracer->getPrice($g);
 		$devise = $this->tracer->getDevise($g);
 		$buyer = $this->provider->getThisBuyer();
@@ -53,7 +53,7 @@ class CheckOut
 
 	public function handleTransaction($token)
 	{
-		$t = $this->tracer->findTrace($token);
+		$t = $this->tracer->findTraceByToken($token);
 		if(is_null($t)){
 			throw new \InvalidArgumentException("Can not find Trace for given token");	
 		}

@@ -5,6 +5,7 @@ namespace Makuta\ClientBundle\twig;
 use Makuta\ClientBundle\Model\Goods;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Makuta\ClientBundle\Model\TxTracer;
 
 /**
 * 
@@ -12,17 +13,20 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class CheckoutExtension extends \Twig_Extension
 {
 	protected $router;
+
+	protected $tracer;
 	
-	function __construct(Router $r)
+	function __construct(Router $r,TxTracer $tracer)
 	{
 		$this->router = $r;
+		$this->tracer = $tracer;
 	}
 
 	public function generateCheckoutUrl(Goods $g)
 	{
+		$code = $this->tracer->getGoodsCode($g);
 		return $this->router->generate('makuta_client_checkout',
-										array("gname"=>$g->getName(),
-											  "gcode"=>$g->getCode()),
+										array("code"=>$code),
 										UrlGeneratorInterface::ABSOLUTE_PATH);
 	}
 

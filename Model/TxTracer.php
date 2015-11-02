@@ -55,6 +55,16 @@ class TxTracer
 		return $qb->getQuery()->getOneOrNullResult();
 	}
 
+	public function findTraceByToken($token)
+	{
+		$qb = $this->em->createQueryBuilder();
+		$qb->select('t')
+		   ->from("MakutaClientBundle:Trace","t")
+		   ->where('t.token = :token')
+		   ->setParameter("token",$token);
+		return $qb->getQuery()->getOneOrNullResult();
+	}
+
 	public function getTrace($criteria = array())
 	{
 		$qb = $this->em->createQueryBuilder();
@@ -149,7 +159,7 @@ class TxTracer
 		$name = $name[0];
 		foreach ($this->goods as $goods) {
 			if($name == $goods->name){
-				return $classe;
+				return $goods->entity;
 			}
 		}
 		return null;

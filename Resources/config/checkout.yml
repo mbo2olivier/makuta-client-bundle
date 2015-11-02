@@ -9,6 +9,6 @@ services:
             - %makuta_client.checkout_enabled%
     makuta_client.checkout_extension:
         class: Makuta\ClientBundle\Twig\CheckoutExtension
-        arguments: [@router]
+        arguments: [@router,@makuta_client.tx_tracer]
         tags:
             - { name : twig.extension }
