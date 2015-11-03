@@ -1,6 +1,6 @@
 <?php 
 
-namespace Makuta\ClientBundle\twig;
+namespace Makuta\ClientBundle\Twig;
 
 use Makuta\ClientBundle\Model\Goods;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
