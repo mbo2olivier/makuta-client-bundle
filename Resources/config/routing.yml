@@ -2,4 +2,4 @@ makuta_client_checkout:
     path:     /makuta/checkout/{code}
     defaults: { _controller: MakutaClientBundle:Checkout:payment }
     requirements:
-        code: \w+
+        code: ([a-zA-Z0-9]+)_(.+)
