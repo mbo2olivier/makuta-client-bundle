@@ -76,10 +76,20 @@ class TxTracer
 			$qb->andWhere('t.buyerId = :bid')
 			   ->setParameter("bid",$b);
 		}
+		if(isset($criteria['by_buyers'])){
+			$b = $criteria['by_buyers'];
+			$qb->andWhere('t.buyerId LIKE :bname')
+			   ->setParameter("bname",$b."\_%");
+		}
 		if(isset($criteria['goods'])){
 			$g = $this->getGoodsCode($criteria['goods']);
 			$qb->andWhere('t.goodsCode = :gc')
 			   ->setParameter("gc",$g);
+		}
+		if(isset($criteria['by_goods'])){
+			$g = $criteria['by_goods'];
+			$qb->andWhere('t.goodsCode = :gname')
+			   ->setParameter("gname",$g."\_%");
 		}
 		if(isset($criteria["from"])){
 			$qb->andWhere('t.date >= :from')

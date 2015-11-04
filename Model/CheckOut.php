@@ -9,6 +9,7 @@ use Makuta\ClientBundle\Entity\Trace;
 class CheckOut
 {
 	protected $tracer;
+	
 	protected $makuta;
 
 	protected $provider;
@@ -59,11 +60,14 @@ class CheckOut
 		}
 		$response = $this->makuta->getStatus($token);
 		if($response["ACK"]=="SUCCESS"){
-			$t->setTel($response["TEL"]);
-			$t->setBuyerName($response["NOMS"]);
-			$t->setStatus($response["STATUS"]);
-			$t->setAmount($response["PAID"]);
-			$this->tracer->saveTrace($t);
+			if($response["STATUS"] != $t->getStatus()){
+				$t->setTel($response["TEL"]);
+				$t->setBuyerName($response["NAMES"]);
+				$t->setStatus($response["STATUS"]);
+				$t->setAmount($response["PAID"]);
+				$t->setCurrency($response["CURRENCY"]);
+				$this->tracer->saveTrace($t);
+			}
 			return $t;
 		}else{
 			throw new \RuntimeException($response["MESSAGE"]);
