@@ -86,6 +86,12 @@ class TxTracer
 			$qb->andWhere('t.goodsCode = :gc')
 			   ->setParameter("gc",$g);
 		}
+		if(isset($criteria['goods_sort'])){
+			$qb->addOrderBy('t.goodsLabel', $criteria['goods_sort']);
+		}
+		if(isset($criteria['buyers_sort'])){
+			$qb->addOrderBy('t.buyerName', $criteria['buyers_sort']);
+		}
 		if(isset($criteria['by_goods'])){
 			$g = $criteria['by_goods'];
 			$qb->andWhere('t.goodsCode = :gname')
@@ -99,10 +105,9 @@ class TxTracer
 			$qb->andWhere('t.date < :to')
 			   ->setParameter("to",$criteria["to"]);
 		}
-		if(isset($criteria["status"])){
-			$qb->andWhere('t.status = :st')
-			   ->setParameter("st",$criteria["status"]);
-		}
+		$st = (isset($criteria["status"]))? $criteria["status"]: 4;
+		$qb->andWhere('t.status = :st')
+		   ->setParameter("st",$st);
 		$query= $qb->getQuery();
 
 		if(isset($criteria['limit'])){
