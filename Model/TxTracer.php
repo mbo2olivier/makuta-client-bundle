@@ -99,6 +99,10 @@ class TxTracer
 			$qb->andWhere('t.date < :to')
 			   ->setParameter("to",$criteria["to"]);
 		}
+		if(isset($criteria["status"])){
+			$qb->andWhere('t.status = :st')
+			   ->setParameter("st",$criteria["status"]);
+		}
 		$query= $qb->getQuery();
 
 		if(isset($criteria['limit'])){
