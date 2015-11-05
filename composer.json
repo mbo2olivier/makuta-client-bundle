@@ -17,7 +17,7 @@
         "php": ">=5.3.2",
         "symfony/framework-bundle": ">=2.4",
         "doctrine/doctrine-bundle": "*",
-        "mbo2olivier/makuta_client": ">=1.0.0"
+        "mbo2olivier/makuta_client": ">=1.0.1"
     },
     "autoload" : {
         "psr-4" : {
