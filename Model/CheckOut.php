@@ -30,9 +30,13 @@ class CheckOut
 	public function openTransaction($gcode)
 	{
 		$g = $this->provider->getGoods($gcode);
+        $buyer = $this->provider->getThisBuyer();
+        $attempt = $this->tryReopen($buyer,$g);
+        if(!is_null($attempt)){
+            return $attempt;
+        }
 		$amount = $this->tracer->getPrice($g);
 		$devise = $this->tracer->getDevise($g);
-		$buyer = $this->provider->getThisBuyer();
 		$response = $this->makuta->openTransaction($amount,$devise,$g->getCode(),$buyer->getFullName(),$this->account);
 		if($response['ACK'] === "SUCCESS"){
 			$t = new Trace();
@@ -78,4 +82,22 @@ class CheckOut
 	{
 		return $this->enabled;
 	}
+
+    private function tryReopen(Buyer $b,Goods $g){
+        $t = $this->tracer->traceUnclosed($b,$g);
+        if(!is_null($t)){
+            $token = $t->getToken();
+            $response = $this->makuta->getStatus($token);
+            if($response["ACK"]=="SUCCESS"){
+                $status = $response["STATUS"];
+                $tab = array(TxTracer::TX_STATUS_TERMINATED,TxTracer::TX_STATUS_OPENED,TxTracer::TX_STATUS_WAITING_PAYMENT,TxTracer::TX_STATUS_CONFLICT);
+                if(in_array($status,$tab)){
+                    return "http://www.e-makuta.com/web/payment/".$token;
+                }
+            }else{
+                throw new \RuntimeException($response["MESSAGE"]);
+            }
+        }
+        return null;
+    }
 }

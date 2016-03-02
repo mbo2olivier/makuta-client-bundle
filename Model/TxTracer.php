@@ -9,6 +9,15 @@ use Makuta\ClientBundle\Entity\Trace;
 */
 class TxTracer
 {
+
+    const TX_STATUS_OPENED=0;
+    const TX_STATUS_WAITING_PAYMENT=1;
+    const TX_STATUS_CANCELLED=2;
+    const TX_STATUS_INVALID=3;
+    const TX_STATUS_TERMINATED=4;
+    const TX_STATUS_ANONYMOUSLY_CANCELLED=5;
+    const TX_STATUS_CONFLICT=6;
+
 	protected $em;
 
 	protected $buyers;
@@ -42,8 +51,43 @@ class TxTracer
 		$gc = $this->getGoodsCode($g);
 		$qb->andWhere('t.goodsCode = :gc')
 		   ->setParameter("gc",$gc);
+        $qb->andWhere('t.status = :st')
+           ->setParameter("st",self::TX_STATUS_TERMINATED);
+
 		return $qb->getQuery()->getOneOrNullResult();
 	}
+
+    public function traceAchived(Buyer $b,Goods $g)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('t')
+            ->from("MakutaClientBundle:Trace","t");
+        $bid = $this->getBuyerId($b);
+        $qb->andWhere('t.buyerId = :bid')
+            ->setParameter("bid",$bid);
+        $gc = $this->getGoodsCode($g);
+        $qb->andWhere('t.goodsCode = :gc')
+            ->setParameter("gc",$gc);
+        $qb->andWhere('t.status IN = :tab')
+            ->setParameter("tab",array(self::TX_STATUS_TERMINATED,self::TX_STATUS_INVALID,self::TX_STATUS_CANCELLED,self::TX_STATUS_ANONYMOUSLY_CANCELLED));
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function traceUnclosed(Buyer $b,Goods $g)
+    {
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('t')
+            ->from("MakutaClientBundle:Trace","t");
+        $bid = $this->getBuyerId($b);
+        $qb->andWhere('t.buyerId = :bid')
+            ->setParameter("bid",$bid);
+        $gc = $this->getGoodsCode($g);
+        $qb->andWhere('t.goodsCode = :gc')
+            ->setParameter("gc",$gc);
+        $qb->andWhere('t.status IN = :tab')
+            ->setParameter("tab",array(self::TX_STATUS_OPENED,self::TX_STATUS_CONFLICT,self::TX_STATUS_WAITING_PAYMENT));
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 
 	public function findTrace($id)
 	{
