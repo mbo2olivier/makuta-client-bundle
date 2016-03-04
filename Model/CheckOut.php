@@ -92,7 +92,7 @@ class CheckOut
                 $status = $response["STATUS"];
                 $tab = array(TxTracer::TX_STATUS_TERMINATED,TxTracer::TX_STATUS_OPENED,TxTracer::TX_STATUS_WAITING_PAYMENT,TxTracer::TX_STATUS_CONFLICT);
                 if(in_array($status,$tab)){
-                    return "http://www.e-makuta.com/web/payment/".$token;
+                    return urlencode("http://www.e-makuta.com/web/payment/".$token);
                 }
             }else{
                 throw new \RuntimeException($response["MESSAGE"]);
