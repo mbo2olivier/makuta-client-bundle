@@ -68,7 +68,7 @@ class TxTracer
         $gc = $this->getGoodsCode($g);
         $qb->andWhere('t.goodsCode = :gc')
             ->setParameter("gc",$gc);
-        $qb->andWhere('t.status IN = :tab')
+        $qb->andWhere($qb->expr()->in('t.status',':tab'))
             ->setParameter("tab",array(self::TX_STATUS_TERMINATED,self::TX_STATUS_INVALID,self::TX_STATUS_CANCELLED,self::TX_STATUS_ANONYMOUSLY_CANCELLED));
         return $qb->getQuery()->getOneOrNullResult();
     }
@@ -84,7 +84,7 @@ class TxTracer
         $gc = $this->getGoodsCode($g);
         $qb->andWhere('t.goodsCode = :gc')
             ->setParameter("gc",$gc);
-        $qb->andWhere('t.status IN = :tab')
+        $qb->andWhere($qb->expr()->in('t.status',':tab'))
             ->setParameter("tab",array(self::TX_STATUS_OPENED,self::TX_STATUS_CONFLICT,self::TX_STATUS_WAITING_PAYMENT));
         return $qb->getQuery()->getOneOrNullResult();
     }
