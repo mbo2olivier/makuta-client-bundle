@@ -21,7 +21,7 @@ class CheckoutController extends Controller
             if(is_null($trace)) throw $this->createNotFoundException("Le paiement désigné n'existe pas");
         	$route = ($trace->getStatus() == self::STATUS_TERMINATED)? $this->container->getParameter("makuta_client.routes.success_callback"): $this->container->getParameter("makuta_client.routes.failure_callback");
         	return $this->redirect($this->generateUrl($route)."?trace=".$trace->getId());
-        } catch ( \InvalidArgumenException $e) {
+        } catch ( \InvalidArgumentException $e) {
         	throw $this->createNotFoundException($e->getMessage());
         }
     }
@@ -35,7 +35,7 @@ class CheckoutController extends Controller
             if(!$enabled) throw new \LogicException("Makuta Checkout is not enabled in your application.");
             $trace = $this->get('makuta_client.checkout')->handleTransaction($token);
             return new Response("SUCCESS");
-        } catch ( \InvalidArgumenException $e) {
+        } catch ( \InvalidArgumentException $e) {
             throw $this->createNotFoundException($e->getMessage());
         }
     }

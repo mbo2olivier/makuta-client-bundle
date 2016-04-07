@@ -90,6 +90,8 @@ class CheckOut
             $response = $this->makuta->getStatus($token);
             if($response["ACK"]=="SUCCESS"){
                 $status = $response["STATUS"];
+                $t->setStatus($status);
+                $this->tracer->saveTrace($t);
                 $tab = array(TxTracer::TX_STATUS_TERMINATED,TxTracer::TX_STATUS_OPENED,TxTracer::TX_STATUS_WAITING_PAYMENT,TxTracer::TX_STATUS_CONFLICT);
                 if(in_array($status,$tab)){
                     return urlencode("http://www.e-makuta.com/web/payment/".$token);
